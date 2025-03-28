@@ -3,10 +3,14 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useTest } from "@/contexts/TestContext";
 
 const TestInstructions: React.FC = () => {
-  const { startTest } = useTest();
+  const handleStartTest = (testType: "mcq" | "coding") => {
+    // Create a URL with query parameters
+    const testURL = `${window.location.origin}/test?type=${testType}`;
+    // Open in a new tab
+    window.open(testURL, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <div className="container max-w-4xl py-10 animate-fade-in">
@@ -29,8 +33,9 @@ const TestInstructions: React.FC = () => {
             <h3 className="text-lg font-bold mb-4">Important Rules</h3>
             <ul className="list-disc pl-5 space-y-2">
               <li>This is a secure, distraction-free testing environment.</li>
+              <li>The test will open in a new tab and automatically enter full-screen mode.</li>
               <li>You may not exit full-screen mode during the test.</li>
-              <li>Switching tabs or windows is not allowed.</li>
+              <li>Switching tabs or windows is not allowed and will be monitored.</li>
               <li>You will receive 3 warnings for rule violations before automatic termination.</li>
               <li>The timer will continue to run even if you close the browser.</li>
               <li>Ensure you have a stable internet connection before beginning.</li>
@@ -68,14 +73,14 @@ const TestInstructions: React.FC = () => {
             <Button 
               variant="outline" 
               className="border-test-blue text-test-blue hover:bg-test-blue hover:text-white"
-              onClick={() => startTest("mcq")}
+              onClick={() => handleStartTest("mcq")}
             >
               Start MCQ Test
             </Button>
             <Button 
               variant="outline" 
               className="border-test-blue text-test-blue hover:bg-test-blue hover:text-white"
-              onClick={() => startTest("coding")}
+              onClick={() => handleStartTest("coding")}
             >
               Start Coding Test
             </Button>

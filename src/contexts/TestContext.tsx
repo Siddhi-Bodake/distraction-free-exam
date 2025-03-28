@@ -1,6 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 type QuestionStatus = "unanswered" | "answered" | "review";
 
@@ -52,7 +52,7 @@ interface TestContextType {
 const initialState: TestState = {
   testType: null,
   isFullScreen: false,
-  timeRemaining: 3600, // 1 hour in seconds
+  timeRemaining: 3600,
   tabSwitchCount: 0,
   currentQuestionIndex: 0,
   mcqAnswers: {},
@@ -65,7 +65,6 @@ const initialState: TestState = {
   isTestActive: false,
 };
 
-// Sample MCQ questions
 const sampleMCQQuestions: MCQQuestion[] = [
   {
     id: 1,
@@ -99,7 +98,6 @@ const sampleMCQQuestions: MCQQuestion[] = [
   },
 ];
 
-// Sample coding question
 const sampleCodingQuestions: CodingQuestion[] = [
   {
     id: 1,
@@ -137,8 +135,9 @@ export const TestProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     codingQuestions: sampleCodingQuestions,
     currentCode: defaultCode,
   });
+  
+  const navigate = useNavigate();
 
-  // Timer effect
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -176,6 +175,10 @@ export const TestProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       isTestActive: false,
       isFullScreen: false,
     }));
+    
+    if (state.isTestActive) {
+      navigate("/submitted");
+    }
   };
 
   const goToQuestion = (index: number) => {
@@ -217,10 +220,9 @@ export const TestProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const runTests = () => {
-    // Simulating test runs - in a real app this would evaluate the code
     const results = state.codingQuestions[state.currentQuestionIndex].testCases.reduce(
       (acc, _, index) => {
-        acc[`test${index + 1}`] = Math.random() > 0.5; // Random pass/fail for demo
+        acc[`test${index + 1}`] = Math.random() > 0.5;
         return acc;
       },
       {} as Record<string, boolean>
@@ -245,7 +247,6 @@ export const TestProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       isSubmitting: true,
     }));
 
-    // Simulate submission delay
     setTimeout(() => {
       toast.success("Test submitted successfully!", {
         duration: 2000,
